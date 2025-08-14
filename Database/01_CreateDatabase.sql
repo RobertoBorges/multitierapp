@@ -17,13 +17,13 @@ GO
 CREATE DATABASE BookShopDB
 ON 
 ( NAME = 'BookShopDB_Data',
-  FILENAME = 'C:\Program Files\Microsoft SQL Server\MSSQL10.SQLEXPRESS\MSSQL\DATA\BookShopDB.mdf',
+  FILENAME = '/var/opt/mssql/data/BookShopDB.mdf',
   SIZE = 100MB,
   MAXSIZE = 1GB,
   FILEGROWTH = 10MB )
 LOG ON 
 ( NAME = 'BookShopDB_Log',
-  FILENAME = 'C:\Program Files\Microsoft SQL Server\MSSQL10.SQLEXPRESS\MSSQL\DATA\BookShopDB.ldf',
+  FILENAME = '/var/opt/mssql/data/BookShopDB.ldf',
   SIZE = 10MB,
   MAXSIZE = 100MB,
   FILEGROWTH = 1MB );

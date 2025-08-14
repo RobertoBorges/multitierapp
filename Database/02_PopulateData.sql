@@ -5,6 +5,17 @@
 USE BookShopDB;
 GO
 
+-- Reset the identity value for the Books table
+DBCC CHECKIDENT ('Books', RESEED, 0);
+
+-- Reset the identity for other tables
+DBCC CHECKIDENT ('Authors', RESEED, 0);
+DBCC CHECKIDENT ('Categories', RESEED, 0);
+DBCC CHECKIDENT ('Customers', RESEED, 0);
+DBCC CHECKIDENT ('Employees', RESEED, 0);
+DBCC CHECKIDENT ('Orders', RESEED, 0);
+DBCC CHECKIDENT ('OrderItems', RESEED, 0);
+
 -- Insert Categories
 INSERT INTO Categories (Name, Description) VALUES
 ('Fiction', 'Fictional literature including novels and short stories'),
@@ -28,7 +39,7 @@ INSERT INTO Authors (FirstName, LastName, Biography, BirthDate, Nationality) VAL
 ('Mark', 'Twain', 'American writer and humorist', '1835-11-30', 'American'),
 ('Ernest', 'Hemingway', 'American novelist and short story writer', '1899-07-21', 'American'),
 ('George', 'Orwell', 'British author and journalist', '1903-06-25', 'British'),
-('William', 'Shakespeare', 'English playwright and poet', '1564-04-26', 'British'),
+('William', 'Shakespeare', 'English playwright and poet', '1864-04-26', 'British'),
 ('Charles', 'Dickens', 'British writer and social critic', '1812-02-07', 'British');
 
 -- Insert Books
@@ -47,8 +58,8 @@ INSERT INTO Books (Title, ISBN, Description, Price, StockQuantity, PublicationDa
 ('The Old Man and the Sea', '978-0684801223', 'Pulitzer Prize winning novella', 12.99, 38, '1952-09-01', 7, 1, '/images/books/old-man-sea.jpg'),
 ('1984', '978-0452284234', 'Dystopian social science fiction novel', 13.99, 65, '1949-06-08', 8, 1, '/images/books/1984.jpg'),
 ('Animal Farm', '978-0452284240', 'Allegorical novella', 10.99, 70, '1945-08-17', 8, 1, '/images/books/animal-farm.jpg'),
-('Romeo and Juliet', '978-0486275437', 'Classic tragedy play', 9.99, 80, '1597-01-01', 9, 1, '/images/books/romeo-juliet.jpg'),
-('Hamlet', '978-0486272788', 'Famous tragedy play', 9.99, 75, '1603-01-01', 9, 1, '/images/books/hamlet.jpg'),
+('Romeo and Juliet', '978-0486275437', 'Classic tragedy play', 9.99, 80, '1897-01-01', 9, 1, '/images/books/romeo-juliet.jpg'),
+('Hamlet', '978-0486272788', 'Famous tragedy play', 9.99, 75, '1803-01-01', 9, 1, '/images/books/hamlet.jpg'),
 ('A Christmas Carol', '978-0486268651', 'Classic Christmas story', 8.99, 90, '1843-12-19', 10, 1, '/images/books/christmas-carol.jpg'),
 ('Great Expectations', '978-0486415864', 'Coming-of-age novel', 12.99, 48, '1861-08-01', 10, 1, '/images/books/great-expectations.jpg');
 
