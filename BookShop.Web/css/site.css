@@ -278,3 +278,45 @@ div.menu ul li {
     background-color: #4b6c9e;
     width: 100%;
 }
+
+/* About Page Styles */
+.about-section {
+    margin: 20px 0;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+.about-section h1 {
+    color: #4b6c9e;
+    font-size: 2em;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #ddd;
+    padding-bottom: 10px;
+}
+
+.about-content {
+    line-height: 1.6;
+}
+
+.about-content h2 {
+    color: #4b6c9e;
+    font-size: 1.4em;
+    margin: 20px 0 10px 0;
+}
+
+.contact-info {
+    background-color: #eef5fc;
+    padding: 15px;
+    border-left: 4px solid #4b6c9e;
+    margin-top: 30px;
+}
+
+.version-info {
+    display: block;
+    margin-top: 30px;
+    font-size: 0.9em;
+    color: #777;
+    font-style: italic;
+}

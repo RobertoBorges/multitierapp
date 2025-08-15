@@ -6,6 +6,7 @@ using System.Web.UI.WebControls;
 using System.Reflection;
 using System.Reflection.Emit;
 using BookShop.Common.Models;
+using BookShop.DataAccess.Repositories;
 
 // Helper classes to create dynamic objects in .NET 2.0/3.5
 public class DynamicObject
@@ -143,28 +144,42 @@ public partial class Books : System.Web.UI.Page
     {
         try
         {
-            // Sample categories - in real app this would come from CategoryService
-            List<Category> categories = new List<Category>();
-
-            // Create each category manually
-            Category category1 = CreateCategory(1, "Fiction");
-            categories.Add(category1);
-
-            Category category2 = CreateCategory(2, "Non-Fiction");
-            categories.Add(category2);
-
-            Category category3 = CreateCategory(3, "Science Fiction");
-            categories.Add(category3);
-
-            Category category4 = CreateCategory(4, "Mystery");
-            categories.Add(category4);
-
-            Category category5 = CreateCategory(5, "Romance");
-            categories.Add(category5);
-
-            foreach (Category category in categories)
+            // First add the "All Categories" option
+            CategoryDropDown.Items.Add(new ListItem("All Categories", "0"));
+            
+            try
             {
-                CategoryDropDown.Items.Add(new ListItem(category.Name, category.CategoryId.ToString()));
+                // Get categories from database using CategoryRepository
+                CategoryRepository categoryRepository = new CategoryRepository();
+                List<Category> categories = categoryRepository.GetAllCategories();
+                
+                // Add each category to dropdown
+                foreach (Category category in categories)
+                {
+                    CategoryDropDown.Items.Add(new ListItem(category.Name, category.CategoryId.ToString()));
+                }
+            }
+            catch (Exception ex)
+            {
+                // If database access fails, fall back to sample categories
+                System.Diagnostics.Debug.WriteLine("Error loading categories from database: " + ex.Message);
+                
+                // Create sample categories
+                List<Category> fallbackCategories = new List<Category>();
+                fallbackCategories.Add(CreateCategory(1, "Fiction"));
+                fallbackCategories.Add(CreateCategory(2, "Non-Fiction"));
+                fallbackCategories.Add(CreateCategory(3, "Science Fiction"));
+                fallbackCategories.Add(CreateCategory(4, "Mystery"));
+                fallbackCategories.Add(CreateCategory(5, "Romance"));
+                
+                // Add sample categories to dropdown
+                foreach (Category category in fallbackCategories)
+                {
+                    CategoryDropDown.Items.Add(new ListItem(category.Name, category.CategoryId.ToString()));
+                }
+                
+                // Log the error but don't show it to user for categories
+                System.Diagnostics.Debug.WriteLine("Using fallback categories. Error: " + ex.Message);
             }
         }
         catch (Exception ex)
@@ -177,21 +192,21 @@ public partial class Books : System.Web.UI.Page
     {
         try
         {
-            List<Book> books = GetSampleBooks();
-
+            List<Book> books;
             int selectedCategoryId = Convert.ToInt32(CategoryDropDown.SelectedValue);
+            
+            // Create repository instance
+            BookRepository bookRepository = new BookRepository();
+            
+            // If a category is selected, get books for that category directly from the repository
             if (selectedCategoryId > 0)
             {
-                // Filter books manually instead of using LINQ Where
-                List<Book> filteredBooks = new List<Book>();
-                foreach (Book book in books)
-                {
-                    if (book.CategoryId == selectedCategoryId)
-                    {
-                        filteredBooks.Add(book);
-                    }
-                }
-                books = filteredBooks;
+                books = bookRepository.GetBooksByCategory(selectedCategoryId);
+            }
+            else
+            {
+                // Otherwise get all books
+                books = bookRepository.GetAllBooks();
             }
 
             if (books.Count > 0) // Instead of using LINQ Any()
@@ -238,7 +253,20 @@ public partial class Books : System.Web.UI.Page
     private Author CreateAuthor(string fullName)
     {
         Author author = new Author();
-        author.FirstName = fullName;
+        
+        // Split fullName into first and last name
+        string[] nameParts = fullName.Split(' ');
+        if (nameParts.Length > 1)
+        {
+            author.FirstName = nameParts[0];
+            author.LastName = nameParts[nameParts.Length - 1]; // Take last part as last name
+        }
+        else
+        {
+            author.FirstName = fullName;
+            author.LastName = "";
+        }
+        
         return author;
     }
     
@@ -272,80 +300,50 @@ public partial class Books : System.Web.UI.Page
 
     private List<Book> GetSampleBooks()
     {
-        List<Book> books = new List<Book>();
-
-        // Book 1
-        books.Add(CreateBook(
-            1, 
-            "Harry Potter and the Philosopher's Stone", 
-            "J.K. Rowling", 
-            1, 
-            "Fiction", 
-            12.99m, 
-            50, 
-            "~/images/books/harry-potter-1.jpg"
-        ));
-        
-        // Book 2
-        books.Add(CreateBook(
-            2, 
-            "The Shining", 
-            "Stephen King", 
-            4, 
-            "Mystery", 
-            14.99m, 
-            30, 
-            "~/images/books/the-shining.jpg"
-        ));
-        
-        // Book 3
-        books.Add(CreateBook(
-            3, 
-            "Foundation", 
-            "Isaac Asimov", 
-            3, 
-            "Science Fiction", 
-            15.99m, 
-            20, 
-            "~/images/books/foundation.jpg"
-        ));
-        
-        // Book 4
-        books.Add(CreateBook(
-            4, 
-            "Pride and Prejudice", 
-            "Jane Austen", 
-            5, 
-            "Romance", 
-            11.99m, 
-            60, 
-            "~/images/books/pride-prejudice.jpg"
-        ));
-        
-        // Book 5
-        books.Add(CreateBook(
-            5, 
-            "1984", 
-            "George Orwell", 
-            1, 
-            "Fiction", 
-            13.99m, 
-            65, 
-            "~/images/books/1984.jpg"
-        ));
-        
-        // Book 6
-        books.Add(CreateBook(
-            6, 
-            "Murder on the Orient Express", 
-            "Agatha Christie", 
-            4, 
-            "Mystery", 
-            13.99m, 
-            40, 
-            "~/images/books/orient-express.jpg"
-        ));
-        
-        return books;
+        try
+        {
+            // Get actual books from the database using BookRepository
+            BookRepository bookRepository = new BookRepository();
+            List<Book> books = bookRepository.GetAllBooks();
+            
+            // Return all books from the database
+            return books;
+        }
+        catch (Exception ex)
+        {
+            // Log the error
+            System.Diagnostics.Debug.WriteLine("Error loading books from database: " + ex.Message);
+            
+            // If there's an error accessing the database, fall back to sample data
+            List<Book> fallbackBooks = new List<Book>();
+            
+            // Create fallback sample data
+            fallbackBooks.Add(CreateBook(
+                1, 
+                "Harry Potter and the Philosopher's Stone", 
+                "J.K. Rowling", 
+                1, 
+                "Fiction", 
+                12.99m, 
+                50, 
+                "~/images/books/harry-potter-1.jpg"
+            ));
+            
+            fallbackBooks.Add(CreateBook(
+                2, 
+                "The Shining", 
+                "Stephen King", 
+                4, 
+                "Mystery", 
+                14.99m, 
+                30, 
+                "~/images/books/the-shining.jpg"
+            ));
+            
+            // Show the error message
+            ShowMessage("Unable to connect to database. Showing sample data instead. Error: " + ex.Message, false);
+            
+            return fallbackBooks;
+        }
     }
 }

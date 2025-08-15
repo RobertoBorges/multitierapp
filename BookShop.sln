@@ -9,7 +9,7 @@ EndProject
 Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "BookShop.Web", "BookShop.Web\", "{94D5A093-1B9C-4212-B1A9-12DA8DEEC0DC}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFramework = "3.5"
-		ProjectReferences = "{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}|BookShop.Common.dll;"
+		ProjectReferences = "{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}|BookShop.Common.dll;{B2C3D4E5-0000-0000-0000-000000000000}|BookShop.DataAccess.dll;"
 		Debug.AspNetCompiler.VirtualPath = "/BookShop.Web"
 		Debug.AspNetCompiler.PhysicalPath = "BookShop.Web\"
 		Debug.AspNetCompiler.TargetPath = "PrecompiledWeb\BookShop.Web\"
