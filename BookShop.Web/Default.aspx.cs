@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
@@ -22,8 +21,23 @@ public partial class _Default : System.Web.UI.Page
         {
             // In a real application, we would use the BookService here
             // For now, create some sample data for demonstration
-            var featuredBooks = CreateSampleBooks();
-            FeaturedBooksRepeater.DataSource = featuredBooks.Take(4); // Show first 4 books
+            List<object> featuredBooks = CreateSampleBooks();
+            // Get first 4 books using standard collection indexing (compatible with .NET 3.5)
+            List<object> firstFourBooks = new List<object>();
+            int count = 0;
+            foreach (object book in featuredBooks)
+            {
+                if (count < 4)
+                {
+                    firstFourBooks.Add(book);
+                    count++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+            FeaturedBooksRepeater.DataSource = firstFourBooks; // Show first 4 books
             FeaturedBooksRepeater.DataBind();
         }
         catch (Exception ex)

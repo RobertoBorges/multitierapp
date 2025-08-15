@@ -2,11 +2,11 @@ Microsoft Visual Studio Solution File, Format Version 10.00
 # Visual Studio 2008
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookShop.Common", "BookShop.Common\BookShop.Common.csproj", "{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookShop.DataAccess", "BookShop.DataAccess\BookShop.DataAccess.csproj", "{B2C3D4E5-F6G7-8901-BCDE-F23456789012}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookShop.DataAccess", "BookShop.DataAccess\BookShop.DataAccess.csproj", "{B2C3D4E5-0000-0000-0000-000000000000}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookShop.BusinessLogic", "BookShop.BusinessLogic\BookShop.BusinessLogic.csproj", "{C3D4E5F6-G7H8-9012-CDEF-345678901234}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookShop.BusinessLogic", "BookShop.BusinessLogic\BookShop.BusinessLogic.csproj", "{C3D4E5F6-0000-0000-0000-000000000000}"
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "BookShop.Web", "BookShop.Web\", "{D4E5F6G7-H8I9-0123-DEF0-456789012345}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "BookShop.Web", "BookShop.Web\", "{94D5A093-1B9C-4212-B1A9-12DA8DEEC0DC}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFramework = "3.5"
 		Debug.AspNetCompiler.VirtualPath = "/BookShop.Web"
@@ -23,9 +23,10 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "BookShop.Web", "BookShop.We
 		Release.AspNetCompiler.ForceOverwrite = "true"
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "61426"
 	EndProjectSection
 EndProject
-Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "BookShop.Admin", "BookShop.Admin\", "{E5F6G7H8-I9J0-1234-EF01-567890123456}"
+Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "BookShop.Admin", "BookShop.Admin\", "{81596A80-A110-43BE-92AC-638A9C67459A}"
 	ProjectSection(WebsiteProperties) = preProject
 		TargetFramework = "3.5"
 		Debug.AspNetCompiler.VirtualPath = "/BookShop.Admin"
@@ -42,6 +43,7 @@ Project("{E24C65DC-7377-472B-9ABA-BC803B73C61A}") = "BookShop.Admin", "BookShop.
 		Release.AspNetCompiler.ForceOverwrite = "true"
 		Release.AspNetCompiler.FixedNames = "false"
 		Release.AspNetCompiler.Debug = "False"
+		VWDPort = "61427"
 	EndProjectSection
 EndProject
 Global
@@ -54,22 +56,14 @@ Global
 		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}.Release|Any CPU.Build.0 = Release|Any CPU
-		{B2C3D4E5-F6G7-8901-BCDE-F23456789012}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B2C3D4E5-F6G7-8901-BCDE-F23456789012}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B2C3D4E5-F6G7-8901-BCDE-F23456789012}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B2C3D4E5-F6G7-8901-BCDE-F23456789012}.Release|Any CPU.Build.0 = Release|Any CPU
-		{C3D4E5F6-G7H8-9012-CDEF-345678901234}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{C3D4E5F6-G7H8-9012-CDEF-345678901234}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{C3D4E5F6-G7H8-9012-CDEF-345678901234}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{C3D4E5F6-G7H8-9012-CDEF-345678901234}.Release|Any CPU.Build.0 = Release|Any CPU
-		{D4E5F6G7-H8I9-0123-DEF0-456789012345}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D4E5F6G7-H8I9-0123-DEF0-456789012345}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{D4E5F6G7-H8I9-0123-DEF0-456789012345}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{D4E5F6G7-H8I9-0123-DEF0-456789012345}.Release|Any CPU.Build.0 = Debug|Any CPU
-		{E5F6G7H8-I9J0-1234-EF01-567890123456}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{E5F6G7H8-I9J0-1234-EF01-567890123456}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{E5F6G7H8-I9J0-1234-EF01-567890123456}.Release|Any CPU.ActiveCfg = Debug|Any CPU
-		{E5F6G7H8-I9J0-1234-EF01-567890123456}.Release|Any CPU.Build.0 = Debug|Any CPU
+		{B2C3D4E5-0000-0000-0000-000000000000}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B2C3D4E5-0000-0000-0000-000000000000}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C3D4E5F6-0000-0000-0000-000000000000}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C3D4E5F6-0000-0000-0000-000000000000}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{94D5A093-1B9C-4212-B1A9-12DA8DEEC0DC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{94D5A093-1B9C-4212-B1A9-12DA8DEEC0DC}.Release|Any CPU.ActiveCfg = Debug|Any CPU
+		{81596A80-A110-43BE-92AC-638A9C67459A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{81596A80-A110-43BE-92AC-638A9C67459A}.Release|Any CPU.ActiveCfg = Debug|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
