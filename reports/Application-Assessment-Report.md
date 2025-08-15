@@ -439,25 +439,50 @@ As part of the Code Modernization phase, the following work has been completed:
    - Implemented async programming patterns throughout
    - Added robust error handling and health monitoring
 
+### Current Progress - Phase 5: Deployment to Azure
+
+We have now completed the infrastructure generation and are in the deployment phase. The following have been accomplished:
+
+1. **Infrastructure as Code**
+   - Created Azure Bicep templates for all required Azure resources
+   - Implemented modular architecture for App Service, SQL Database, Key Vault, and monitoring
+   - Configured proper security settings including Managed Identity
+   - Created deployment parameters for different environments
+
+2. **Deployment Automation**
+   - Created main deployment orchestration script (deploy-azure.ps1)
+   - Implemented Entra ID configuration automation
+   - Added parameter handling for custom service names
+   - Created validation and testing scripts
+
+3. **Deployment Testing**
+   - Prepared scripts for post-deployment validation
+   - Created performance testing capabilities
+
 ### Remaining Work
 
-1. **Database Integration**
+1. **Azure Deployment**
+   - Execute deployment to Azure environment with custom service names
    - Apply EF Core migrations to Azure SQL
    - Test complete database functionality with the production database
 
-2. **Testing**
-   - Perform end-to-end testing of all features
+2. **Validation & Testing**
+   - Perform end-to-end testing of all features in Azure
    - Validate Entra ID authentication flow
    - Test shopping cart and checkout process
-   - Verify admin functionality
+   - Verify admin functionality in cloud
    - Validate order processing workflow
 
 3. **Final Review**
-   - Code review and optimization
-   - Performance testing
+   - Performance testing in Azure environment
    - Security validation
    - Final security assessment
-   - Performance testing
+   - Cost optimization
    - Documentation updates
 
-The code modernization phase is nearly complete, with the core architecture and features successfully migrated to modern .NET 8 standards. The application is now ready for infrastructure generation and deployment to Azure.
+4. **CI/CD Pipeline**
+   - Configure GitHub Actions for automated deployments
+   - Implement testing in the pipeline
+   - Set up monitoring and alerts
+
+The application is now ready for deployment to Azure with fully automated scripts that support custom service naming.

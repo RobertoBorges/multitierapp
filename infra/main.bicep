@@ -31,7 +31,7 @@ var appServicePlanName = '${applicationName}-plan-${environmentName}'
 var appServiceName = '${applicationName}-app-${environmentName}'
 var appInsightsName = '${applicationName}-insights-${environmentName}'
 var logAnalyticsName = '${applicationName}-logs-${environmentName}'
-var keyVaultName = '${applicationName}-kv-${environmentName}${uniqueString(resourceGroup().id)}'
+var keyVaultName = 'kv-${environmentName}-${take(uniqueString(resourceGroup().id), 8)}'
 
 // Resource modules
 module logging 'modules/logging.bicep' = {
@@ -70,7 +70,7 @@ module sqlConnection 'modules/sqlconnection.bicep' = {
   name: 'sqlConnectionDeploy'
   params: {
     keyVaultName: keyVaultName
-    sqlServerName: sqlServerName
+    sqlServerName: '${sqlServerName}.database.windows.net'
     sqlDatabaseName: sqlDatabaseName
   }
   dependsOn: [
@@ -78,24 +78,10 @@ module sqlConnection 'modules/sqlconnection.bicep' = {
   ]
 }
 
-// Backup and Disaster Recovery Configuration
-module backup 'modules/backup.bicep' = {
-  name: 'backupDeploy'
-  params: {
-    location: location
-    tags: tags
-    appServiceName: appServiceName
-    backupEnabled: true
-  }
-  dependsOn: [
-    hosting
-  ]
-}
-
 // Outputs
 output appServiceUrl string = hosting.outputs.appServiceUrl
+output appServiceName string = hosting.outputs.appServiceName
 output appInsightsConnectionString string = logging.outputs.appInsightsConnectionString
 output keyVaultUri string = keyVault.outputs.keyVaultUri
 output sqlConnectionStringSecretUri string = sqlConnection.outputs.connectionStringSecretUri
-output backupEnabled string = backup.outputs.backupEnabled ? 'Yes' : 'No'
-output backupStorageAccountName string = backup.outputs.backupStorageAccountName
+

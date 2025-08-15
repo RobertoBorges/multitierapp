@@ -35,7 +35,7 @@ function Test-BicepFile {
         return $true
     }
     catch {
-        Write-Host "❌ Error validating $displayName: $_" -ForegroundColor Red
+        Write-Host "❌ Error validating $displayName $_" -ForegroundColor Red
         return $false
     }
 }
