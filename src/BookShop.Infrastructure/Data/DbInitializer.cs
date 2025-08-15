@@ -1,0 +1,520 @@
+using BookShop.Core.Models;
+using BookShop.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using System;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Collections.Generic;
+
+namespace BookShop.Infrastructure.Data
+{
+    public class DbInitializer
+    {
+        private readonly ILogger<DbInitializer> _logger;
+        private readonly BookShopDbContext _context;
+        
+        public DbInitializer(
+            ILogger<DbInitializer> logger, 
+            BookShopDbContext context)
+        {
+            _logger = logger;
+            _context = context;
+        }
+
+        public async Task InitializeAsync()
+        {
+            try
+            {
+                // Only seed if the database exists (we won't create it if it doesn't exist)
+                if (_context.Database.CanConnect())
+                {
+                    _logger.LogInformation("Database exists, checking for seed data...");
+                    
+                    // Skip all seeding operations to preserve existing data
+                    _logger.LogInformation("Using existing database structure and data");
+                    
+                    /* Commenting out seeding logic to ensure we don't modify existing data
+                    // Skip seeding if there are already books in the database
+                    if (!await _context.Set<Book>().AnyAsync())
+                    {
+                        _logger.LogInformation("No books found, seeding sample data...");
+                        await SeedSampleDataAsync();
+                        _logger.LogInformation("Sample data seeding completed successfully");
+                    }
+                    else
+                    {
+                        _logger.LogInformation("Database already contains data, skipping seed");
+                    }
+                    */
+                }
+                else
+                {
+                    _logger.LogWarning("Cannot connect to database, skipping initialization");
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred during database initialization");
+            }
+        }
+
+        private async Task SeedSampleDataAsync()
+        {
+            // Add sample categories if none exist
+            if (!await _context.Set<Category>().AnyAsync())
+            {
+                var categories = new[]
+                {
+                    new Category { Name = "Fiction", Description = "Fictional books" },
+                    new Category { Name = "Non-Fiction", Description = "Non-fictional books" },
+                    new Category { Name = "Science Fiction", Description = "Science fiction books" },
+                    new Category { Name = "Mystery", Description = "Mystery and detective books" },
+                    new Category { Name = "Fantasy", Description = "Fantasy books" },
+                    new Category { Name = "Biography", Description = "Biographical works" },
+                    new Category { Name = "History", Description = "Historical books" },
+                    new Category { Name = "Romance", Description = "Romance novels" },
+                    new Category { Name = "Classics", Description = "Classic literature" }
+                };
+
+                await _context.AddRangeAsync(categories);
+                await _context.SaveChangesAsync();
+                _logger.LogInformation("Added {Count} sample categories", categories.Length);
+            }
+
+            // Add sample authors if none exist
+            if (!await _context.Set<Author>().AnyAsync())
+            {
+                var authors = new[]
+                {
+                    new Author { FirstName = "Jane", LastName = "Austen" },
+                    new Author { FirstName = "George", LastName = "Orwell" },
+                    new Author { FirstName = "J.K.", LastName = "Rowling" },
+                    new Author { FirstName = "Agatha", LastName = "Christie" },
+                    new Author { FirstName = "William", LastName = "Shakespeare" },
+                    new Author { FirstName = "Ernest", LastName = "Hemingway" },
+                    new Author { FirstName = "Stephen", LastName = "King" },
+                    new Author { FirstName = "Isaac", LastName = "Asimov" },
+                    new Author { FirstName = "Charles", LastName = "Dickens" },
+                    new Author { FirstName = "Mark", LastName = "Twain" },
+                    new Author { FirstName = "F. Scott", LastName = "Fitzgerald" }
+                };
+
+                await _context.AddRangeAsync(authors);
+                await _context.SaveChangesAsync();
+                _logger.LogInformation("Added {Count} sample authors", authors.Length);
+            }
+
+            // Add sample customers if none exist
+            if (!await _context.Set<Customer>().AnyAsync())
+            {
+                var customers = new[]
+                {
+                    new Customer 
+                    { 
+                        FirstName = "David", 
+                        LastName = "Wilson", 
+                        Email = "david.wilson@example.com", 
+                        PhoneNumber = "555-111-2222",
+                        Address = "123 Main St, Anytown, AN 12345",
+                        RegistrationDate = new DateTime(2022, 1, 15)
+                    },
+                    new Customer 
+                    { 
+                        FirstName = "Emily", 
+                        LastName = "Davis", 
+                        Email = "emily.davis@example.com", 
+                        PhoneNumber = "555-222-3333",
+                        Address = "456 Elm St, Somewhere, SM 67890",
+                        RegistrationDate = new DateTime(2022, 2, 20)
+                    },
+                    new Customer 
+                    { 
+                        FirstName = "James", 
+                        LastName = "Taylor", 
+                        Email = "james.taylor@example.com", 
+                        PhoneNumber = "555-333-4444",
+                        Address = "789 Oak St, Nowhere, NW 54321",
+                        RegistrationDate = new DateTime(2022, 3, 10)
+                    },
+                    new Customer 
+                    { 
+                        FirstName = "Patricia", 
+                        LastName = "Martin", 
+                        Email = "patricia.martin@example.com", 
+                        PhoneNumber = "555-444-5555",
+                        Address = "101 Pine St, Everywhere, EV 13579",
+                        RegistrationDate = new DateTime(2022, 4, 5)
+                    },
+                    new Customer 
+                    { 
+                        FirstName = "Thomas", 
+                        LastName = "Anderson", 
+                        Email = "thomas.anderson@example.com", 
+                        PhoneNumber = "555-555-6666",
+                        Address = "202 Maple St, Anywhere, AW 24680",
+                        RegistrationDate = new DateTime(2022, 5, 12)
+                    }
+                };
+
+                await _context.AddRangeAsync(customers);
+                await _context.SaveChangesAsync();
+                _logger.LogInformation("Added {Count} sample customers", customers.Length);
+            }
+
+            // Add sample employees if none exist
+            if (!await _context.Set<Employee>().AnyAsync())
+            {
+                var employees = new[]
+                {
+                    new Employee 
+                    { 
+                        FirstName = "John", 
+                        LastName = "Smith", 
+                        Email = "john.smith@bookshop.com", 
+                        Phone = "555-123-4567",
+                        HireDate = new DateTime(2018, 6, 15),
+                        JobTitle = "Store Manager",
+                        IsActive = true
+                    },
+                    new Employee 
+                    { 
+                        FirstName = "Jane", 
+                        LastName = "Doe", 
+                        Email = "jane.doe@bookshop.com", 
+                        Phone = "555-234-5678",
+                        HireDate = new DateTime(2019, 3, 10),
+                        JobTitle = "Sales Associate",
+                        IsActive = true
+                    },
+                    new Employee 
+                    { 
+                        FirstName = "Robert", 
+                        LastName = "Johnson", 
+                        Email = "robert.johnson@bookshop.com", 
+                        Phone = "555-345-6789",
+                        HireDate = new DateTime(2020, 7, 22),
+                        JobTitle = "Inventory Specialist",
+                        IsActive = true
+                    },
+                    new Employee 
+                    { 
+                        FirstName = "Sarah", 
+                        LastName = "Williams", 
+                        Email = "sarah.williams@bookshop.com", 
+                        Phone = "555-456-7890",
+                        HireDate = new DateTime(2021, 2, 5),
+                        JobTitle = "Marketing Coordinator",
+                        IsActive = true
+                    },
+                    new Employee 
+                    { 
+                        FirstName = "Michael", 
+                        LastName = "Brown", 
+                        Email = "michael.brown@bookshop.com", 
+                        Phone = "555-567-8901",
+                        HireDate = new DateTime(2019, 9, 18),
+                        JobTitle = "IT Administrator",
+                        IsActive = true
+                    }
+                };
+
+                await _context.AddRangeAsync(employees);
+                await _context.SaveChangesAsync();
+                _logger.LogInformation("Added {Count} sample employees", employees.Length);
+            }
+
+            // Add sample books if none exist
+            if (!await _context.Set<Book>().AnyAsync())
+            {
+                var categories = await _context.Set<Category>().ToListAsync();
+                var authors = await _context.Set<Author>().ToListAsync();
+
+                var books = new[]
+                {
+                    new Book
+                    {
+                        Title = "1984",
+                        ISBN = "978-0451524935",
+                        Description = "A dystopian social science fiction novel about a totalitarian regime",
+                        Price = 9.99m,
+                        PublicationDate = new DateTime(1949, 6, 8),
+                        CategoryId = categories.First(c => c.Name == "Science Fiction").CategoryId,
+                        AuthorId = authors.First(a => a.LastName == "Orwell").AuthorId,
+                        StockQuantity = 10,
+                        ImageUrl = "1984.jpg"
+                    },
+                    new Book
+                    {
+                        Title = "Pride and Prejudice",
+                        ISBN = "978-0141439518",
+                        Description = "A romantic novel of manners that satirically depicts the social life of early 19th-century England",
+                        Price = 8.99m,
+                        PublicationDate = new DateTime(1813, 1, 28),
+                        CategoryId = categories.First(c => c.Name == "Classics").CategoryId,
+                        AuthorId = authors.First(a => a.LastName == "Austen").AuthorId,
+                        StockQuantity = 15,
+                        ImageUrl = "pride-prejudice.jpg"
+                    },
+                    new Book
+                    {
+                        Title = "Harry Potter and the Philosopher's Stone",
+                        ISBN = "978-0747532743",
+                        Description = "The first novel in the Harry Potter series that follows the life of a young wizard",
+                        Price = 12.99m,
+                        PublicationDate = new DateTime(1997, 6, 26),
+                        CategoryId = categories.First(c => c.Name == "Fantasy").CategoryId,
+                        AuthorId = authors.First(a => a.LastName == "Rowling").AuthorId,
+                        StockQuantity = 20,
+                        ImageUrl = "harry-potter-1.jpg"
+                    },
+                    new Book
+                    {
+                        Title = "The ABC Murders",
+                        ISBN = "978-0062073488",
+                        Description = "A mystery novel where Hercule Poirot investigates a series of alphabetical murders",
+                        Price = 7.99m,
+                        PublicationDate = new DateTime(1936, 1, 6),
+                        CategoryId = categories.First(c => c.Name == "Mystery").CategoryId,
+                        AuthorId = authors.First(a => a.LastName == "Christie").AuthorId,
+                        StockQuantity = 12,
+                        ImageUrl = "abc-murders.jpg"
+                    },
+                    new Book
+                    {
+                        Title = "Hamlet",
+                        ISBN = "978-0743477123",
+                        Description = "A tragedy that portrays the revenge Prince Hamlet exacts on his uncle for murdering his father",
+                        Price = 6.99m,
+                        PublicationDate = new DateTime(1603, 1, 1),
+                        CategoryId = categories.First(c => c.Name == "Classics").CategoryId,
+                        AuthorId = authors.First(a => a.LastName == "Shakespeare").AuthorId,
+                        StockQuantity = 8,
+                        ImageUrl = "hamlet.jpg"
+                    },
+                    new Book
+                    {
+                        Title = "The Old Man and the Sea",
+                        ISBN = "978-0684801223",
+                        Description = "The story of an aging Cuban fisherman and his struggle with a giant marlin",
+                        Price = 8.49m,
+                        PublicationDate = new DateTime(1952, 9, 1),
+                        CategoryId = categories.First(c => c.Name == "Fiction").CategoryId,
+                        AuthorId = authors.First(a => a.LastName == "Hemingway").AuthorId,
+                        StockQuantity = 14,
+                        ImageUrl = "old-man-sea.jpg"
+                    },
+                    new Book
+                    {
+                        Title = "The Shining",
+                        ISBN = "978-0307743657",
+                        Description = "A horror novel about a family staying at an isolated hotel where supernatural forces target them",
+                        Price = 10.99m,
+                        PublicationDate = new DateTime(1977, 1, 28),
+                        CategoryId = categories.First(c => c.Name == "Fiction").CategoryId,
+                        AuthorId = authors.First(a => a.LastName == "King").AuthorId,
+                        StockQuantity = 18,
+                        ImageUrl = "the-shining.jpg"
+                    },
+                    new Book
+                    {
+                        Title = "Foundation",
+                        ISBN = "978-0553293357",
+                        Description = "The first novel in the Foundation series about the fall of a galactic empire",
+                        Price = 9.49m,
+                        PublicationDate = new DateTime(1951, 8, 1),
+                        CategoryId = categories.First(c => c.Name == "Science Fiction").CategoryId,
+                        AuthorId = authors.First(a => a.LastName == "Asimov").AuthorId,
+                        StockQuantity = 11,
+                        ImageUrl = "foundation.jpg"
+                    },
+                    new Book
+                    {
+                        Title = "Great Expectations",
+                        ISBN = "978-0141439600",
+                        Description = "A coming-of-age novel depicting the growth and personal development of an orphan named Pip",
+                        Price = 7.99m,
+                        PublicationDate = new DateTime(1861, 8, 30),
+                        CategoryId = categories.First(c => c.Name == "Classics").CategoryId,
+                        AuthorId = authors.First(a => a.LastName == "Dickens").AuthorId,
+                        StockQuantity = 9,
+                        ImageUrl = "great-expectations.jpg"
+                    },
+                    new Book
+                    {
+                        Title = "The Adventures of Tom Sawyer",
+                        ISBN = "978-0486280615",
+                        Description = "A novel about a boy growing up along the Mississippi River",
+                        Price = 6.49m,
+                        PublicationDate = new DateTime(1876, 12, 10),
+                        CategoryId = categories.First(c => c.Name == "Classics").CategoryId,
+                        AuthorId = authors.First(a => a.LastName == "Twain").AuthorId,
+                        StockQuantity = 13,
+                        ImageUrl = "tom-sawyer.jpg"
+                    },
+                    new Book
+                    {
+                        Title = "Harry Potter and the Chamber of Secrets",
+                        ISBN = "978-0439064873",
+                        Description = "The second novel in the Harry Potter series",
+                        Price = 12.99m,
+                        PublicationDate = new DateTime(1998, 7, 2),
+                        CategoryId = categories.First(c => c.Name == "Fantasy").CategoryId,
+                        AuthorId = authors.First(a => a.LastName == "Rowling").AuthorId,
+                        StockQuantity = 19,
+                        ImageUrl = "harry-potter-2.jpg"
+                    },
+                    new Book
+                    {
+                        Title = "Animal Farm",
+                        ISBN = "978-0451526342",
+                        Description = "An allegorical novella about a group of farm animals who rebel against their human farmer",
+                        Price = 8.49m,
+                        PublicationDate = new DateTime(1945, 8, 17),
+                        CategoryId = categories.First(c => c.Name == "Fiction").CategoryId,
+                        AuthorId = authors.First(a => a.LastName == "Orwell").AuthorId,
+                        StockQuantity = 16,
+                        ImageUrl = "animal-farm.jpg"
+                    },
+                    new Book
+                    {
+                        Title = "Murder on the Orient Express",
+                        ISBN = "978-0062693662",
+                        Description = "A detective novel featuring Hercule Poirot solving a murder on a train",
+                        Price = 8.99m,
+                        PublicationDate = new DateTime(1934, 1, 1),
+                        CategoryId = categories.First(c => c.Name == "Mystery").CategoryId,
+                        AuthorId = authors.First(a => a.LastName == "Christie").AuthorId,
+                        StockQuantity = 10,
+                        ImageUrl = "orient-express.jpg"
+                    },
+                    new Book
+                    {
+                        Title = "Romeo and Juliet",
+                        ISBN = "978-0743477116",
+                        Description = "A tragedy about two young lovers whose deaths ultimately reconcile their feuding families",
+                        Price = 6.99m,
+                        PublicationDate = new DateTime(1597, 1, 1),
+                        CategoryId = categories.First(c => c.Name == "Classics").CategoryId,
+                        AuthorId = authors.First(a => a.LastName == "Shakespeare").AuthorId,
+                        StockQuantity = 10,
+                        ImageUrl = "romeo-juliet.jpg"
+                    },
+                    new Book
+                    {
+                        Title = "Sense and Sensibility",
+                        ISBN = "978-0141439662",
+                        Description = "A novel that follows the Dashwood sisters as they cope with circumstances of sudden poverty",
+                        Price = 8.49m,
+                        PublicationDate = new DateTime(1811, 10, 30),
+                        CategoryId = categories.First(c => c.Name == "Classics").CategoryId,
+                        AuthorId = authors.First(a => a.LastName == "Austen").AuthorId,
+                        StockQuantity = 12,
+                        ImageUrl = "sense-sensibility.jpg"
+                    },
+                    new Book
+                    {
+                        Title = "A Christmas Carol",
+                        ISBN = "978-0486268651",
+                        Description = "A novella that tells the story of Ebenezer Scrooge's transformation after the supernatural visits",
+                        Price = 5.99m,
+                        PublicationDate = new DateTime(1843, 12, 19),
+                        CategoryId = categories.First(c => c.Name == "Classics").CategoryId,
+                        AuthorId = authors.First(a => a.LastName == "Dickens").AuthorId,
+                        StockQuantity = 18,
+                        ImageUrl = "christmas-carol.jpg"
+                    },
+                    new Book
+                    {
+                        Title = "I, Robot",
+                        ISBN = "978-0553294385",
+                        Description = "A collection of science fiction short stories that established the Three Laws of Robotics",
+                        Price = 9.49m,
+                        PublicationDate = new DateTime(1950, 12, 2),
+                        CategoryId = categories.First(c => c.Name == "Science Fiction").CategoryId,
+                        AuthorId = authors.First(a => a.LastName == "Asimov").AuthorId,
+                        StockQuantity = 14,
+                        ImageUrl = "i-robot.jpg"
+                    },
+                    new Book
+                    {
+                        Title = "IT",
+                        ISBN = "978-1501142970",
+                        Description = "A horror novel about an ancient, shape-shifting evil that preys on the children of a small Maine town",
+                        Price = 12.99m,
+                        PublicationDate = new DateTime(1986, 9, 15),
+                        CategoryId = categories.First(c => c.Name == "Fiction").CategoryId,
+                        AuthorId = authors.First(a => a.LastName == "King").AuthorId,
+                        StockQuantity = 16,
+                        ImageUrl = "it.jpg"
+                    }
+                };
+
+                await _context.AddRangeAsync(books);
+                await _context.SaveChangesAsync();
+                _logger.LogInformation("Added {Count} sample books", books.Length);
+            }
+
+            // Add sample orders if none exist
+            if (!await _context.Set<Order>().AnyAsync())
+            {
+                var customers = await _context.Set<Customer>().ToListAsync();
+                var books = await _context.Set<Book>().ToListAsync();
+                var random = new Random();
+
+                // Create a few orders for different customers
+                for (int i = 0; i < 10; i++)
+                {
+                    var customer = customers[random.Next(customers.Count)];
+                    var orderDate = DateTime.Now.AddDays(-random.Next(1, 60));
+                    
+                    var order = new Order
+                    {
+                        CustomerId = customer.CustomerId,
+                        OrderDate = orderDate,
+                        OrderStatus = "Completed",
+                        ShippingAddress = customer.Address,
+                        TotalAmount = 0 // Will be calculated based on items
+                    };
+
+                    // Add 1-5 random books to each order
+                    var itemCount = random.Next(1, 6);
+                    var orderItems = new List<OrderItem>();
+                    decimal totalAmount = 0;
+
+                    for (int j = 0; j < itemCount; j++)
+                    {
+                        var book = books[random.Next(books.Count)];
+                        var quantity = random.Next(1, 4);
+                        var price = book.Price;
+                        var itemTotal = price * quantity;
+                        totalAmount += itemTotal;
+
+                        orderItems.Add(new OrderItem
+                        {
+                            BookId = book.BookId,
+                            Quantity = quantity,
+                            UnitPrice = price
+                        });
+                    }
+
+                    order.TotalAmount = totalAmount;
+                    await _context.AddAsync(order);
+                    await _context.SaveChangesAsync();
+
+                    // Add order items with the saved order ID
+                    foreach (var item in orderItems)
+                    {
+                        item.OrderId = order.Id;
+                        await _context.AddAsync(item);
+                    }
+                    
+                    await _context.SaveChangesAsync();
+                }
+                
+                _logger.LogInformation("Added sample orders with items");
+            }
+        }
+    }
+}

@@ -1,0 +1,45 @@
+﻿@model IEnumerable<BookShop.Web.Models.ViewModels.BookViewModel>
+
+@{
+    ViewData["Title"] = "Home";
+}
+
+<div class="jumbotron bg-light p-5 rounded mb-4">
+    <h1 class="display-4">Welcome to @(ViewBag.ApplicationName ?? "BookShop")</h1>
+    <p class="lead">Discover a world of books at your fingertips. Browse our extensive collection of titles across various genres.</p>
+    <hr class="my-4">
+    <p>Looking for your next great read? Start exploring our catalog now.</p>
+    <a class="btn btn-primary btn-lg" asp-controller="Books" asp-action="Index" role="button">Browse Books</a>
+</div>
+
+<h2 class="mb-4">Featured Books</h2>
+
+@if (Model != null && Model.Any())
+{
+    <div class="row">
+        @foreach (var book in Model)
+        {
+            <div class="col-md-4 col-sm-6 mb-4">
+                <div class="card h-100">
+                    <img src="@book.ImageUrl" 
+                         class="card-img-top" 
+                         alt="@(string.IsNullOrEmpty(book.ImageUrl) ? "No Image Available" : book.Title)" 
+                         style="height: 300px; object-fit: cover;" />
+                    <div class="card-body">
+                        <h5 class="card-title">@book.Title</h5>
+                        <p class="card-text text-muted">@book.AuthorName</p>
+                        <p class="card-text">@Html.Raw(book.Description != null && book.Description.Length > 100 ? book.Description.Substring(0, 100) + "..." : book.Description)</p>
+                        <p class="card-text text-primary font-weight-bold">@book.Price.ToString("C")</p>
+                        <a asp-controller="Books" asp-action="Details" asp-route-id="@book.BookId" class="btn btn-outline-primary">View Details</a>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <div class="alert alert-info">
+        No featured books available at this time.
+    </div>
+}

@@ -1,0 +1,61 @@
+@model BookShop.Web.Models.ViewModels.BookViewModel
+
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="container">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a asp-controller="Home" asp-action="Index">Home</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Books" asp-action="Index">Books</a></li>
+            <li class="breadcrumb-item"><a asp-controller="Books" asp-action="Index" asp-route-categoryId="@Model.CategoryId">@Model.CategoryName</a></li>
+            <li class="breadcrumb-item active" aria-current="page">@Model.Title</li>
+        </ol>
+    </nav>
+
+    <div class="row">
+        <div class="col-md-4">
+            <img src="@Model.ImageUrl" 
+                 class="img-fluid rounded" 
+                 alt="@(string.IsNullOrEmpty(Model.ImageUrl) ? "No Image Available" : Model.Title)" />
+        </div>
+        <div class="col-md-8">
+            <h1 class="mb-3">@Model.Title</h1>
+            
+            <p class="text-muted">By <a asp-controller="Books" asp-action="Index" asp-route-authorId="@Model.AuthorId">@Model.AuthorName</a></p>
+            
+            <div class="mb-3">
+                <span class="badge bg-primary">@Model.CategoryName</span>
+                <span class="badge bg-secondary">ISBN: @Model.ISBN</span>
+                <span class="badge bg-info text-dark">Published: @Model.PublicationDate.ToString("MMMM dd, yyyy")</span>
+            </div>
+            
+            <h3 class="text-primary mb-3">@Model.Price.ToString("C")</h3>
+            
+            <p>@Html.Raw(Model.Description)</p>
+            
+            <div class="mb-4">
+                <p>
+                    <strong>Availability:</strong> 
+                    @if (Model.StockQuantity > 0)
+                    {
+                        <span class="text-success">In Stock (@Model.StockQuantity available)</span>
+                    }
+                    else
+                    {
+                        <span class="text-danger">Out of Stock</span>
+                    }
+                </p>
+            </div>
+            
+            <a asp-controller="Books" asp-action="Index" class="btn btn-secondary me-2">Back to Books</a>
+            <a href="#" class="btn btn-primary">Add to Cart</a>
+        </div>
+    </div>
+    
+    <div class="mt-5">
+        <h3>You might also like</h3>
+        <p class="text-muted">This feature will be implemented in future updates.</p>
+    </div>
+</div>

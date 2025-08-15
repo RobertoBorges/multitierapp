@@ -1,0 +1,78 @@
+@model BookShop.Web.Models.ViewModels.BookListViewModel
+
+@{
+    ViewData["Title"] = "Books";
+    if (!string.IsNullOrEmpty(Model.CurrentCategory))
+    {
+        ViewData["Title"] = $"Books - {Model.CurrentCategory}";
+    }
+    else if (!string.IsNullOrEmpty(Model.CurrentAuthor))
+    {
+        ViewData["Title"] = $"Books by {Model.CurrentAuthor}";
+    }
+    else if (!string.IsNullOrEmpty(Model.SearchTerm))
+    {
+        ViewData["Title"] = $"Search Results: {Model.SearchTerm}";
+    }
+}
+
+<div class="container">
+    <h1>@ViewData["Title"]</h1>
+    
+    @if (!string.IsNullOrEmpty(Model.SearchTerm))
+    {
+        <p>Showing results for: <strong>@Model.SearchTerm</strong> <a asp-action="Index" class="btn btn-sm btn-outline-secondary">Clear</a></p>
+    }
+
+    @if (Model.Books != null && Model.Books.Any())
+    {
+        <div class="row">
+            @foreach (var book in Model.Books)
+            {
+                <div class="col-md-4 col-sm-6 mb-4">
+                    <div class="card h-100">
+                        <img src="@book.ImageUrl" 
+                             class="card-img-top" 
+                             alt="@(string.IsNullOrEmpty(book.ImageUrl) ? "No Image Available" : book.Title)" 
+                             style="height: 250px; object-fit: cover;" />
+                        <div class="card-body">
+                            <h5 class="card-title">@book.Title</h5>
+                            <p class="card-text text-muted">By <a asp-action="Index" asp-route-authorId="@book.AuthorId">@book.AuthorName</a></p>
+                            <p class="card-text text-muted">Category: <a asp-action="Index" asp-route-categoryId="@book.CategoryId">@book.CategoryName</a></p>
+                            <p class="card-text">@Html.Raw(book.Description != null && book.Description.Length > 100 ? book.Description.Substring(0, 100) + "..." : book.Description)</p>
+                            <p class="card-text text-primary font-weight-bold">@book.Price.ToString("C")</p>
+                            <a asp-action="Details" asp-route-id="@book.BookId" class="btn btn-outline-primary">View Details</a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+        
+        @if (Model.PagingInfo.TotalPages > 1)
+        {
+            <div class="d-flex justify-content-center mt-4">
+                <nav aria-label="Page navigation">
+                    <ul class="pagination">
+                        @for (int i = 1; i <= Model.PagingInfo.TotalPages; i++)
+                        {
+                            <li class="page-item @(i == Model.PagingInfo.CurrentPage ? "active" : "")">
+                                <a class="page-link" asp-action="Index" 
+                                   asp-route-categoryId="@(string.IsNullOrEmpty(Model.CurrentCategory) ? null : Model.Books.FirstOrDefault()?.CategoryId)" 
+                                   asp-route-authorId="@(string.IsNullOrEmpty(Model.CurrentAuthor) ? null : Model.Books.FirstOrDefault()?.AuthorId)" 
+                                   asp-route-searchTerm="@Model.SearchTerm" 
+                                   asp-route-page="@i">@i</a>
+                            </li>
+                        }
+                    </ul>
+                </nav>
+            </div>
+        }
+    }
+    else
+    {
+        <div class="alert alert-info mt-3">
+            <p>No books found matching your criteria.</p>
+            <a asp-action="Index" class="btn btn-primary">View all books</a>
+        </div>
+    }
+</div>

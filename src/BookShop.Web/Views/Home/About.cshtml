@@ -1,0 +1,45 @@
+@{
+    ViewData["Title"] = "About";
+}
+
+<h1>About @(ViewBag.ApplicationName ?? "BookShop")</h1>
+
+<div class="row mt-4">
+    <div class="col-md-8">
+        <p>Welcome to @(ViewBag.ApplicationName ?? "BookShop"), your ultimate destination for books of all genres. We've been serving book lovers since 2005, providing a carefully curated collection of titles from renowned authors worldwide.</p>
+        
+        <p>Our mission is to promote literacy and a love for reading by making quality books accessible to everyone. Whether you're looking for bestsellers, classics, or hidden gems, we've got you covered.</p>
+        
+        <h3 class="mt-4">Our Services</h3>
+        <ul>
+            <li>Wide selection of books across multiple genres</li>
+            <li>Competitive prices on all titles</li>
+            <li>Fast shipping across the country</li>
+            <li>Expert recommendations from our staff of book enthusiasts</li>
+            <li>Special orders for hard-to-find titles</li>
+        </ul>
+        
+        <h3 class="mt-4">Contact Us</h3>
+        <p>
+            <strong>Address:</strong> 123 Book Lane, Reading City, RC 12345<br>
+            <strong>Phone:</strong> (555) 123-4567<br>
+            <strong>Email:</strong> info@bookshop.com<br>
+            <strong>Hours:</strong> Monday - Saturday, 9am - 8pm
+        </p>
+    </div>
+    <div class="col-md-4">
+        <div class="card bg-light">
+            <div class="card-body">
+                <h4 class="card-title">Join Our Newsletter</h4>
+                <p class="card-text">Stay updated with our latest arrivals, author events, and exclusive promotions.</p>
+                <form>
+                    <div class="mb-3">
+                        <label for="email" class="form-label">Email address</label>
+                        <input type="email" class="form-control" id="email" placeholder="name@example.com">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Subscribe</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

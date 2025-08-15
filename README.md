@@ -1,6 +1,8 @@
-# BookShop Multi-Tier Application (.NET Framework 3.5)
+# BookShop Multi-Tier Application
 
-A legacy multi-tier book store application built on .NET Framework 3.5, demonstrating old-fashioned enterprise architecture patterns from the 2008 era. This application showcases a complete on-premises solution for a library bookstore with employee management and Windows Authentication.
+> ⚠️ **Migration in Progress**: This application is currently being migrated from .NET Framework 3.5 to .NET 8 for Azure deployment.
+
+A multi-tier book store application that provides a complete solution for a library bookstore with employee management and authentication. The application has been migrated from a legacy .NET Framework 3.5 on-premises solution to a modern cloud-native .NET 8 application for Azure.
 
 ## Architecture Overview
 
@@ -20,15 +22,45 @@ This application follows a traditional 3-tier architecture:
 ### 4. Database
 - SQL Server 2008 compatible database with complete schema and sample data
 
-## Technologies Used
+## Modernized Architecture
 
+The application has been migrated to a modern Clean Architecture pattern:
+
+### 1. Presentation Layer
+- **BookShop.Web** - ASP.NET Core MVC with modern Razor views
+- **Admin Area** - Integrated with main site, secured with Entra ID
+
+### 2. Core and Business Logic
+- **BookShop.Core** - Domain models and interfaces
+- **BookShop.Application** - Application services with dependency injection
+
+### 3. Infrastructure Layer
+- **BookShop.Infrastructure** - EF Core database access and external service integration
+
+### 4. Database
+- Azure SQL Database with EF Core database-first approach
+
+## Technologies
+
+### Legacy Version (Before Migration)
 - .NET Framework 3.5
 - ASP.NET Web Forms
 - ADO.NET (DataSets/DataTables pattern)
 - SQL Server 2008
 - Windows Authentication
 - IIS 7.0+
-- Legacy CSS styling (2008 era)
+
+### Modernized Version (After Migration)
+- .NET 8
+- ASP.NET Core MVC
+- Entity Framework Core
+- Azure SQL Database
+- Microsoft.Identity.Web (Entra ID integration)
+- Azure App Service
+- Application Insights
+- Azure Bicep for IaC
+- Bootstrap 5 UI framework
+- Modern JavaScript
 
 ## Prerequisites
 
@@ -185,4 +217,38 @@ For technical issues:
 
 ---
 
-*This application represents a typical enterprise application from 2008, showcasing legacy patterns and technologies that were industry standard at the time.*
+*This application originally represented a typical enterprise application from 2008, showcasing legacy patterns and technologies that were industry standard at the time. It has since been modernized and migrated to Azure using .NET 8 and cloud-native patterns.*
+
+## Azure Deployment (Modernized Version)
+
+The modernized application is designed to be deployed to Azure using the following services:
+
+1. **Azure App Service**:
+   - Hosting platform for the web application
+   - Integrated with Entra ID for authentication
+   - Configured with managed identity for secure database access
+
+2. **Azure SQL Database**:
+   - Fully managed SQL database for the application
+   - Connected using Entity Framework Core
+   - Secured with Entra ID authentication
+
+3. **Application Insights**:
+   - Built-in monitoring and telemetry
+   - Performance tracking and exception logging
+   - User behavior analytics
+
+4. **CI/CD Pipeline**:
+   - GitHub Actions workflow for automated deployments
+   - Automated testing and validation
+   - Infrastructure as Code using Azure Bicep
+
+### Getting Started with the Modern Version
+
+1. Navigate to the `src` directory to find the modernized .NET 8 application
+2. See `src/README.md` for detailed instructions on the modern application
+3. Update `appsettings.json` with your Azure resource connection details
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
