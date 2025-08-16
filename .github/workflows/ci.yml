@@ -1,0 +1,89 @@
+name: BookShop CICD
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  # Allow manual trigger
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+      
+      - name: build process
+        run: echo "Build process would happen here"
+      
+      - name: Create artifact
+        run: |
+          mkdir -p ./artifact
+          echo "This is a artifact" > ./artifact/file.txt
+      
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: build-artifact
+          path: ./artifact/
+  
+  deploy-to-dev:
+    name: Deploy to Dev
+    needs: build
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifact
+          path: ./artifact/
+      
+      - name: Deploy to Dev
+        run: |
+          echo "Deploying to Dev environment"
+          echo "Content of artifact:"
+          cat ./artifact/file.txt
+          echo "Deployment to Dev completed successfully!"
+
+  deploy-to-test:
+    name: Deploy to Test
+    needs: deploy-to-dev
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifact
+          path: ./artifact/
+      
+      - name: Deploy to Test
+        run: |
+          echo "Deploying to Test environment"
+          echo "Content of artifact:"
+          cat ./artifact/file.txt
+          echo "Deployment to Test completed successfully!"
+
+  deploy-to-prod:
+    name: Deploy to Production
+    needs: deploy-to-test
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Download artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: build-artifact
+          path: ./artifact/
+      
+      - name: Deploy to Production
+        run: |
+          echo "Deploying to Production environment"
+          echo "Content of artifact:"
+          cat ./artifact/file.txt
+          echo "Deployment to Production completed successfully!"

@@ -1,0 +1,60 @@
+name: BookShop Security Scan
+
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # Run weekly on Sunday at midnight
+  workflow_dispatch:
+
+jobs:
+  security_scan:
+    name: Security Scanning
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: '8.0.x'
+    
+    - name: Run dotnet-format (code style analysis)
+      run: |
+        dotnet tool install -g dotnet-format
+        dotnet format src/BookShop.sln --verify-no-changes
+    
+    - name: Run OWASP Dependency Check
+      uses: dependency-check/Dependency-Check_Action@main
+      with:
+        project: 'BookShop'
+        path: '.'
+        format: 'HTML'
+        out: 'reports'
+    
+    - name: Upload Security Report
+      uses: actions/upload-artifact@v3
+      with:
+        name: dependency-check-report
+        path: reports
+    
+    - name: Run CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+      with:
+        languages: csharp
+    
+    - name: Run Container Scan (for Docker images)
+      uses: azure/container-scan@v0
+      with:
+        image-name: 'bookshop-app:latest'
+        severity-threshold: 'CRITICAL'
+        
+    - name: Run Bicep Security Scan
+      working-directory: ./infra
+      run: |
+        npm install -g @microsoft/security-devops-action
+        msdo bicep --input main.bicep --output-format sarif --output msdo-results.sarif
+    
+    - name: Upload SARIF file
+      uses: github/codeql-action/upload-sarif@v2
+      with:
+        sarif_file: ./infra/msdo-results.sarif

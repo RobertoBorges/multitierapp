@@ -485,4 +485,93 @@ We have now completed the infrastructure generation and are in the deployment ph
    - Implement testing in the pipeline
    - Set up monitoring and alerts
 
-The application is now ready for deployment to Azure with fully automated scripts that support custom service naming.
+### CI/CD Implementation
+
+The CI/CD implementation has been set up using GitHub Actions to automate building, testing, and deploying the BookShop application to Azure. The setup includes:
+
+#### Workflow Architecture
+
+1. **Continuous Integration (ci.yml)**
+   - Triggered on pushes to main branch and pull requests
+   - Builds the application and runs unit tests
+   - Generates code coverage reports
+   - Validates Bicep templates
+   - Runs security scanning with CodeQL
+
+2. **Continuous Deployment (cd.yml)**
+   - Triggered on pushes to main branch or manual dispatch
+   - Supports multi-environment deployment (dev, test, prod)
+   - Includes environment approval workflows
+   - Implements blue-green deployment for production
+   - Includes post-deployment smoke tests
+
+3. **Security Scanning (security-scan.yml)**
+   - Runs on a weekly schedule
+   - Performs OWASP dependency checking
+   - Scans container images
+   - Validates code formatting
+   - Analyzes Bicep templates for security issues
+
+#### Environment Configuration
+
+1. **Development Environment**
+   - Automated deployments from main branch
+   - No approval required
+   - Basic monitoring and alerting
+
+2. **Test Environment**
+   - Requires successful deployment to development
+   - Requires approval from QA team
+   - Runs integration tests
+   - Enhanced monitoring
+
+3. **Production Environment**
+   - Requires successful deployment to test
+   - Requires approval from release managers
+   - Uses deployment slots for zero-downtime updates
+   - Full monitoring and alerting suite
+   - Performance testing and validation
+
+#### Quality Gates
+
+The CI/CD pipelines implement multiple quality gates:
+
+1. **Build Success** - Application must build successfully
+2. **Test Coverage** - Code coverage must meet minimum thresholds
+3. **Security Scan** - No critical security vulnerabilities allowed
+4. **Performance** - Response time must be within acceptable limits
+5. **Validation** - Smoke tests must pass after deployment
+
+#### Monitoring and Alerting
+
+The CI/CD pipelines are integrated with Azure Monitor to provide:
+
+1. **Deployment Monitoring**
+   - Success/failure notifications
+   - Performance impact analysis
+   - Error rate tracking
+
+2. **Application Health**
+   - Availability tests
+   - Response time monitoring
+   - Exception tracking
+
+3. **Security Alerts**
+   - Authentication failures
+   - Authorization violations
+   - Dependency vulnerabilities
+
+#### Rollback Procedures
+
+The CI/CD setup includes automated rollback capabilities:
+
+1. **Development/Test**
+   - Redeploy previous successful version
+   - Restore database from backup if needed
+
+2. **Production**
+   - Swap slots back to previous version
+   - Automated health checks trigger rollback if failed
+   - Manual rollback option for critical issues
+
+The application is now ready for deployment to Azure with fully automated CI/CD pipelines that support multi-environment deployments and include comprehensive security, testing, and monitoring capabilities.
