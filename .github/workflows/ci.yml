@@ -1,8 +1,6 @@
 name: BookShop CICD
 
 on:
-  push:
-    branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
   # Allow manual trigger
@@ -87,3 +85,4 @@ jobs:
           echo "Content of artifact:"
           cat ./artifact/file.txt
           echo "Deployment to Production completed successfully!"
+
