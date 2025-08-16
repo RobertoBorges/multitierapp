@@ -1,9 +1,6 @@
 name: BookShop CICD
 
 on:
-  pull_request:
-    branches: [ "main" ]
-  # Allow manual trigger
   workflow_dispatch:
 
 jobs:
