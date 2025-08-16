@@ -41,8 +41,8 @@ jobs:
     
     - name: Build Web Applications
       run: |
-        aspnet_compiler -v /BookShop.Web -p BookShop.Web\ -targetpath .\publish\BookShop.Web
-        aspnet_compiler -v /BookShop.Admin -p BookShop.Admin\ -targetpath .\publish\BookShop.Admin
+        aspnet_compiler -v /BookShop.Web -p BookShop.Web -targetpath publish\BookShop.Web
+        aspnet_compiler -v /BookShop.Admin -p BookShop.Admin -targetpath publish\BookShop.Admin
       shell: cmd
         
     - name: Upload build artifacts
@@ -50,17 +50,17 @@ jobs:
       with:
         name: bookshop-build-artifacts
         path: |
-          BookShop.Common\bin\Release\
-          BookShop.DataAccess\bin\Release\
-          BookShop.BusinessLogic\bin\Release\
-          publish\
+          BookShop.Common/bin/Release/
+          BookShop.DataAccess/bin/Release/
+          BookShop.BusinessLogic/bin/Release/
+          publish/
         retention-days: 30
         
     - name: Upload database scripts
       uses: actions/upload-artifact@v4
       with:
         name: database-scripts
-        path: Database\
+        path: Database/
         retention-days: 30
 
   code-quality:
@@ -115,5 +115,5 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: bookshop-deployment-package
-        path: deployment-package\
+        path: deployment-package/
         retention-days: 30
