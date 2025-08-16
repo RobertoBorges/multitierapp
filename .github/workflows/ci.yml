@@ -1,0 +1,119 @@
+name: CI
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: windows-2019  # Use Windows 2019 for better .NET Framework 3.5 support
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+      with:
+        vs-version: '[16.0,17.0)'  # Use Visual Studio 2019 tools
+        
+    - name: Setup NuGet
+      uses: NuGet/setup-nuget@v2
+      with:
+        nuget-version: '5.x'
+      
+    - name: Restore NuGet packages
+      run: nuget restore BookShop.sln
+      shell: cmd
+      
+    - name: Build solution
+      run: msbuild BookShop.sln /p:Configuration=Release /p:Platform="Any CPU" /verbosity:minimal
+      shell: cmd
+      
+    - name: Build class libraries individually
+      run: |
+        msbuild BookShop.Common\BookShop.Common.csproj /p:Configuration=Release /p:Platform="Any CPU" /verbosity:minimal
+        msbuild BookShop.DataAccess\BookShop.DataAccess.csproj /p:Configuration=Release /p:Platform="Any CPU" /verbosity:minimal
+        msbuild BookShop.BusinessLogic\BookShop.BusinessLogic.csproj /p:Configuration=Release /p:Platform="Any CPU" /verbosity:minimal
+      shell: cmd
+    
+    - name: Build Web Applications
+      run: |
+        aspnet_compiler -v /BookShop.Web -p BookShop.Web\ -targetpath .\publish\BookShop.Web
+        aspnet_compiler -v /BookShop.Admin -p BookShop.Admin\ -targetpath .\publish\BookShop.Admin
+      shell: cmd
+        
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: bookshop-build-artifacts
+        path: |
+          BookShop.Common\bin\Release\
+          BookShop.DataAccess\bin\Release\
+          BookShop.BusinessLogic\bin\Release\
+          publish\
+        retention-days: 30
+        
+    - name: Upload database scripts
+      uses: actions/upload-artifact@v4
+      with:
+        name: database-scripts
+        path: Database\
+        retention-days: 30
+
+  code-quality:
+    runs-on: windows-2019
+    needs: build
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Run basic code analysis
+      run: |
+        echo "Running code quality checks for .NET Framework 3.5..."
+        echo "Checking for common issues in legacy codebase..."
+        findstr /s /i "TODO\|FIXME\|HACK" *.cs *.aspx *.ascx || echo "No TODO/FIXME/HACK comments found"
+      shell: cmd
+        
+    - name: Check file structure
+      run: |
+        echo "Validating project structure..."
+        if exist "BookShop.sln" echo "Solution file exists"
+        if exist "BookShop.Web\web.config" echo "Web.config exists for customer site"
+        if exist "BookShop.Admin\web.config" echo "Web.config exists for admin site"
+        if exist "Database" echo "Database scripts directory exists"
+      shell: cmd
+
+  prepare-deployment:
+    runs-on: windows-2019
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Download build artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: bookshop-build-artifacts
+        path: artifacts
+        
+    - name: Create deployment package
+      run: |
+        echo "Creating deployment package..."
+        mkdir deployment-package
+        xcopy artifacts deployment-package\ /E /I /H /Y
+        xcopy IIS-Deployment-Guide.md deployment-package\ /Y
+        xcopy README.md deployment-package\ /Y
+      shell: cmd
+      
+    - name: Upload deployment package
+      uses: actions/upload-artifact@v4
+      with:
+        name: bookshop-deployment-package
+        path: deployment-package\
+        retention-days: 30
